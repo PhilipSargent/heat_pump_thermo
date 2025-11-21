@@ -7,6 +7,7 @@ the theoretical maximum COP as it is limited by the thermodynamics.
 Practical heat pumps typically achieve 40% to 60% of their theoretical maximum (Carnot) 
 coefficient of performance (COP), due to part-load running, friction, motor and pump 
 efficiency, and thermodynamic irreversibility losses.
+<img width="1000" height="600" alt="carnot_cop_plot" src="https://github.com/user-attachments/assets/3dffae5f-c88d-4418-b834-36ae63d1e9b4" />
 
 # Carnot COP Summary
 Target T_hot: 35°C (308.15 K) and 65°C (338.15 K)
