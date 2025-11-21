@@ -11,7 +11,12 @@ efficiency, and thermodynamic irreversibility losses.
 If the refrigerant boiling point curve with respect to pressure is a poor match for the 
 inlet and outlet temperatures, then the percentage efficiency achieved for the theoretical 
 maximum COP will be worse.
+
+From Wikipedia:  
+"increasing the size of pipes... would help to reduce noise and the energy consumption of pumps... by decreasing the speed of the fluid, which in turn lowers the Reynolds number and hence the turbulence (and noise) and the head loss. The heat pump itself can be improved by increasing the size of the internal heat exchangers, which in turn increases the efficiency (and the cost) relative to the power of the compressor, and also by reducing the system's internal temperature gap over the compressor. Obviously, this latter measure makes some heat pumps unsuitable to produce high temperatures, which means that a separate machine is needed for producing, e.g., hot tap water."
 <img width="1000" height="600" alt="carnot_cop_plot" src="https://github.com/user-attachments/assets/3dffae5f-c88d-4418-b834-36ae63d1e9b4" />
+
+
 
 # Carnot COP Summary
 Target T_hot: 35°C (308.15 K) and 65°C (338.15 K)
