@@ -1,11 +1,14 @@
 # heat_pump_thermo
 Models and snippets for calculating stuff about COP, SPF etc.
 
-Whatever the refrigerant or mechanisms, you can't do better than the theoretical maximum COP as it is limited by the thermodynamics.
+Whatever the refrigerant or mechanisms, you can't do better than 
+the theoretical maximum COP as it is limited by the thermodynamics.
 
-Practical heat pumps typically achieve 40% to 60% of their theoretical maximum (Carnot) coefficient of performance (COP), due to part-load running, friction, motor and pump efficiency, and thermodynamic irreversibility losses.
+Practical heat pumps typically achieve 40% to 60% of their theoretical maximum (Carnot) 
+coefficient of performance (COP), due to part-load running, friction, motor and pump 
+efficiency, and thermodynamic irreversibility losses.
 
-# --- Carnot COP Summary ---
+# Carnot COP Summary
 Target T_hot: 35°C (308.15 K) and 65°C (338.15 K)
 
 COP Values at Extreme Cold (-35°C):
