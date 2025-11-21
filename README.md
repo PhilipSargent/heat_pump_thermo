@@ -11,14 +11,14 @@ efficiency, and thermodynamic irreversibility losses.
 # Carnot COP Summary
 Target T_hot: 35°C (308.15 K) and 65°C (338.15 K)
 
-COP Values at Extreme Cold (-35°C):
-Ambient Temp (-35°C): COP @ 35°C = 4.40
+COP Values at Extreme Cold (-35°C):  
+Ambient Temp (-35°C): COP @ 35°C = 4.40  
 Ambient Temp (-35°C): COP @ 65°C = 3.38
 
-COP Values at Moderate Cold (0°C):
-Ambient Temp (0°C): COP @ 35°C = 8.80
+COP Values at Moderate Cold (0°C):  
+Ambient Temp (0°C): COP @ 35°C = 8.80  
 Ambient Temp (0°C): COP @ 65°C = 5.20
 
-COP Values at Max Ambient (15°C):
-Ambient Temp (15°C): COP @ 35°C = 15.41
+COP Values at Max Ambient (15°C):  
+Ambient Temp (15°C): COP @ 35°C = 15.41  
 Ambient Temp (15°C): COP @ 65°C = 6.76
