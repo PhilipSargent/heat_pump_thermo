@@ -36,3 +36,4 @@ Ambient Temp (15°C): COP @ 65°C = 6.76
 # Realworld data
 In https://www.cell.com/joule/fulltext/S2542-4351(23)00351-3
 there is measured COP data which should be compared to this theory.
+<img width="1000" height="600" alt="carnot_cop_plot" src="gr2_lrg.jpg" />
