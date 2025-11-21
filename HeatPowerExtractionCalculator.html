@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Heat Extraction Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 48rem; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 24rem; 
+            max-height: 24rem; 
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutral -->
+    <!-- Application Structure Plan: The static report calculates a single value. To make this "explorable," this SPA is an interactive calculator. The structure is: 1) Header, 2) Intro text, 3) A two-column layout with input sliders on the left and real-time output cards on the right (Q, m_dot, delta_T), 4) A dynamic Chart.js line graph visualizing the relationship between Flow Rate (x-axis) and Heat Power (y-axis), which updates as other inputs are changed. This structure directly translates the report's formula into an interactive tool. -->
+    <!-- Visualization & Content Choices: Report Info: Q = m_dot * c_p * delta_T. Goal: Allow users to explore this formula. Viz: Sliders (HTML) for inputs (Flow, T_in, T_out). Dynamic text (HTML) for outputs (Q, m_dot, delta_T). Chart.js Line Chart (Canvas) to show Q vs. Flow Rate. Interaction: Sliders update output text and recalculate/re-render the chart, showing the new relationship curve. Justification: This is far more "explorable" than a static report. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl font-bold text-indigo-700">Heat Power Extraction Calculator</h1>
+            <p class="text-gray-600 mt-1">Based on the report: Heat Power Extracted by Cooling Water</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 mt-6">
+
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-3">Welcome to the Interactive Calculator</h2>
+            <p class="text-gray-600 leading-relaxed">
+                This tool translates the static calculation from the report into a dynamic model. The report calculates the heat power ($Q$) extracted by cooling water based on the formula $Q = \dot{m} \cdot c_p \cdot \Delta T$. Use the sliders below to adjust the input variables and see how they affect the heat power output in real-time. This allows you to explore the relationships between flow rate, temperature change, and extracted energy.
+            </p>
+        </section>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-3">Input Variables</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label for="flowRate" class="flex justify-between items-center text-lg font-medium text-gray-700">
+                            Volume Flow Rate ($\dot{V}$)
+                            <span id="flowRateValue" class="font-bold text-indigo-700 text-xl">20 L/s</span>
+                        </label>
+                        <input type="range" id="flowRate" min="0" max="50" value="20" step="0.5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-thumb-indigo-600">
+                    </div>
+                    
+                    <div>
+                        <label for="tempIn" class="flex justify-between items-center text-lg font-medium text-gray-700">
+                            Initial Temperature ($T_{\text{in}}$)
+                            <span id="tempInValue" class="font-bold text-indigo-700 text-xl">4 °C</span>
+                        </label>
+                        <input type="range" id="tempIn" min="-10" max="30" value="4" step="0.5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-thumb-indigo-600">
+                    </div>
+                    
+                    <div>
+                        <label for="tempOut" class="flex justify-between items-center text-lg font-medium text-gray-700">
+                            Final Temperature ($T_{\text{out}}$)
+                            <span id="tempOutValue" class="font-bold text-indigo-700 text-xl">0 °C</span>
+                        </label>
+                        <input type="range" id="tempOut" min="-10" max="30" value="0" step="0.5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-thumb-indigo-600">
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-3">Live Results</h2>
+                
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="bg-indigo-700 text-white p-6 rounded-lg shadow-xl text-center">
+                        <h3 class="text-lg font-semibold text-indigo-100 uppercase tracking-wider">Heat Power Extracted ($Q$)</h3>
+                        <p id="powerOutput" class="text-5xl font-extrabold my-3">334.88</p>
+                        <p class="text-2xl text-indigo-200">kW</p>
+                    </div>
+                    
+                    <div class="grid grid-rows-2 gap-6">
+                        <div class="bg-gray-100 p-4 rounded-lg text-center">
+                            <h4 class="text-md font-semibold text-gray-500 uppercase tracking-wider">Mass Flow Rate ($\dot{m}$)</h4>
+                            <p id="massFlowOutput" class="text-3xl font-bold text-gray-800 mt-2">20.0 kg/s</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-lg text-center">
+                            <h4 class="text-md font-semibold text-gray-500 uppercase tracking-wider">Temp. Change ($\Delta T$)</h4>
+                            <p id="deltaTOutput" class="text-3xl font-bold text-gray-800 mt-2">4.0 K</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-2">Calculation Constants</h4>
+                    <p class="text-gray-600">Specific Heat Capacity ($c_p$): <span class="font-medium">4186 J/kg·K</span></p>
+                    <p class="text-gray-600">Density of Water ($\rho$): <span class="font-medium">1.0 kg/L</span></p>
+                </div>
+            </div>
+        </div>
+
+        <section class="bg-white p-6 rounded-lg shadow-md mt-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-3">Visualizing the Relationship</h2>
+            <p class="text-gray-600 leading-relaxed mb-6">
+                This chart shows how the extracted Heat Power ($Q$) changes as the Volume Flow Rate increases. The curve on this chart is dynamic: try changing the **Initial** or **Final Temperature** using the sliders above, and watch how the relationship changes. This visualization helps you explore the $\Delta T$ variable from the report's formula.
+            </p>
+            <div class="chart-container">
+                <canvas id="powerChart"></canvas>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 mt-8 text-gray-500 text-sm">
+        <p>Interactive dashboard generated from source report `heat_extraction_calculation.md`.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const SPECIFIC_HEAT_WATER = 4186; 
+            const DENSITY_WATER = 1.0; 
+
+            const flowRateSlider = document.getElementById('flowRate');
+            const tempInSlider = document.getElementById('tempIn');
+            const tempOutSlider = document.getElementById('tempOut');
+
+            const flowRateValue = document.getElementById('flowRateValue');
+            const tempInValue = document.getElementById('tempInValue');
+            const tempOutValue = document.getElementById('tempOutValue');
+
+            const powerOutput = document.getElementById('powerOutput');
+            const massFlowOutput = document.getElementById('massFlowOutput');
+            const deltaTOutput = document.getElementById('deltaTOutput');
+
+            let powerChart;
+
+            function initChart() {
+                const ctx = document.getElementById('powerChart').getContext('2d');
+                powerChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Heat Power (kW)',
+                            data: [],
+                            borderColor: 'rgb(79, 70, 229)',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            fill: true,
+                            tension: 0.1,
+                            pointBackgroundColor: 'rgb(79, 70, 229)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Volume Flow Rate (L/s)',
+                                    font: { size: 14 }
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Heat Power (kW)',
+                                    font: { size: 14 }
+                                },
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.dataset.label}: ${context.parsed.y.toFixed(2)} kW`;
+                                    },
+                                    title: function(context) {
+                                        return `Flow Rate: ${context[0].label} L/s`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateChart(currentDeltaT) {
+                if (!powerChart) return;
+
+                const maxFlow = 50;
+                const labels = [];
+                const data = [];
+
+                for (let flow = 0; flow <= maxFlow; flow += 2) {
+                    labels.push(flow);
+                    const massFlow = flow * DENSITY_WATER;
+                    const powerWatts = massFlow * SPECIFIC_HEAT_WATER * currentDeltaT;
+                    data.push(powerWatts / 1000); 
+                }
+
+                powerChart.data.labels = labels;
+                powerChart.data.datasets[0].data = data;
+                powerChart.data.datasets[0].label = `Heat Power (kW) at Delta T = ${currentDeltaT.toFixed(1)} K`;
+                powerChart.update();
+            }
+
+            function calculateAndDisplay() {
+                const flow = flowRateSlider.valueAsNumber;
+                const tempIn = tempInSlider.valueAsNumber;
+                const tempOut = tempOutSlider.valueAsNumber;
+
+                flowRateValue.textContent = `${flow.toFixed(1)} L/s`;
+                tempInValue.textContent = `${tempIn.toFixed(1)} °C`;
+                tempOutValue.textContent = `${tempOut.toFixed(1)} °C`;
+
+                const deltaT = tempIn - tempOut;
+                const massFlow = flow * DENSITY_WATER;
+                const powerWatts = massFlow * SPECIFIC_HEAT_WATER * deltaT;
+                const powerKilowatts = powerWatts / 1000;
+
+                if (powerKilowatts >= 0) {
+                     powerOutput.textContent = powerKilowatts.toFixed(2);
+                } else {
+                     powerOutput.textContent = '---'; 
+                }
+               
+                massFlowOutput.textContent = `${massFlow.toFixed(1)} kg/s`;
+                deltaTOutput.textContent = `${deltaT.toFixed(1)} K`;
+
+                updateChart(deltaT);
+            }
+            
+            initChart();
+            calculateAndDisplay();
+
+            flowRateSlider.addEventListener('input', calculateAndDisplay);
+            tempInSlider.addEventListener('input', calculateAndDisplay);
+            tempOutSlider.addEventListener('input', calculateAndDisplay);
+        });
+    </script>
+</body>
+</html>
