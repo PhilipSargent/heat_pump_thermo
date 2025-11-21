@@ -1,5 +1,6 @@
 # heat_pump_thermo
 Models and snippets for calculating stuff about COP, SPF etc.
+Read https://en.wikipedia.org/wiki/Coefficient_of_performance
 
 Whatever the refrigerant or mechanisms, you can't do better than 
 the theoretical maximum COP as it is limited by the thermodynamics.
