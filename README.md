@@ -32,3 +32,7 @@ Ambient Temp (0°C): COP @ 65°C = 5.20
 COP Values at Max Ambient (15°C):  
 Ambient Temp (15°C): COP @ 35°C = 15.41  
 Ambient Temp (15°C): COP @ 65°C = 6.76
+
+# Realworld data
+In https://www.cell.com/joule/fulltext/S2542-4351(23)00351-3
+there is measured COP data which should be compared to this theory.
